@@ -1,0 +1,6 @@
+/proc/RunTest()
+	ASSERT(isnull(null))
+	var/datum/O = new()
+	ASSERT(!isnull(O))
+	del(O)
+	ASSERT(isnull(O))

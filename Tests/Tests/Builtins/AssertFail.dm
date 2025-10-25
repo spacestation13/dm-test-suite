@@ -1,0 +1,4 @@
+// RUNTIME ERROR
+
+/proc/RunTest()
+	ASSERT(FALSE)

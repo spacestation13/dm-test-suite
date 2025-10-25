@@ -1,0 +1,5 @@
+/proc/RunTest()
+	ASSERT(!isnan(1.#INF))
+	ASSERT(!isnan(null))
+	ASSERT(!isnan(5))
+	ASSERT(isnan(1.#IND))
