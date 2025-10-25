@@ -74,7 +74,7 @@ while read -r file; do
 		echo "Test passed: $relative"
 		testspassed=$((testspassed + 1))
 	fi
-done < <(find Tests -type f -name "*.dm")
+done < <(find Tests/Tests -type f -name "*.dm")
 
 
 echo "--------------------------------------------------------------------------------"
