@@ -1,3 +1,5 @@
+[![BYOND unit tests](https://github.com/spacestation13/dm-test-suite/actions/workflows/byond_tests.yml/badge.svg)](https://github.com/spacestation13/dm-test-suite/actions/workflows/byond_tests.yml)
+
 ## DM Test Suite
 This is a suite of tests and the CI to run them against the latest BYOND engine.
 
