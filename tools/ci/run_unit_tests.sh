@@ -2,7 +2,7 @@
 set -euo pipefail
 
 touch summary.log
-base="Content.Tests/DMProject/environment.dme"
+base="Tests/environment.dme"
 testsfailed=0
 byondcrashes=0
 testspassed=0
@@ -45,27 +45,27 @@ while read -r file; do
 	fi
 
 	echo "Running $relative"
-	touch Content.Tests/DMProject/errors.log
-	if ! DreamDaemon Content.Tests/DMProject/environment.dmb -once -close -trusted -verbose -invisible; then
+	touch Tests/errors.log
+	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible; then
 		echo "TEST FAILED: BYOND CRASHED!"
 		echo "TEST FAILED: $relative" >> summary.log
 		byondcrashes=$((byondcrashes+1))
-		sed -i '/^[[:space:]]*$/d' Content.Tests/DMProject/errors.log
-		cat Content.Tests/DMProject/errors.log
-		rm Content.Tests/DMProject/errors.log
+		sed -i '/^[[:space:]]*$/d' Tests/errors.log
+		cat Tests/errors.log
+		rm Tests/errors.log
 	fi
-	if [ -s "Content.Tests/DMProject/errors.log" ]; then
+	if [ -s "Tests/errors.log" ]; then
 		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]	then #expected runtime error, should compile but then fail to run
 			echo "Expected runtime error, test passed"
-			rm Content.Tests/DMProject/errors.log
+			rm Tests/errors.log
 			testspassed=$((testspassed + 1))
 			continue
 		else
 			echo "Errors detected!"
-			sed -i '/^[[:space:]]*$/d' Content.Tests/DMProject/errors.log
-			cat Content.Tests/DMProject/errors.log
+			sed -i '/^[[:space:]]*$/d' Tests/errors.log
+			cat Tests/errors.log
 			echo "TEST FAILED: $relative"
-			rm Content.Tests/DMProject/errors.log
+			rm Tests/errors.log
 			echo "TEST FAILED: $relative" >> summary.log
 			testsfailed=$((testsfailed + 1))
 			continue
@@ -74,7 +74,7 @@ while read -r file; do
 		echo "Test passed: $relative"
 		testspassed=$((testspassed + 1))
 	fi
-done < <(find Content.Tests/DMProject/Tests -type f -name "*.dm")
+done < <(find Tests/Tests -type f -name "*.dm")
 
 
 echo "--------------------------------------------------------------------------------"
