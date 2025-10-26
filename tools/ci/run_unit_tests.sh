@@ -24,7 +24,7 @@ while read -r file; do
 	
 
 	echo "Compiling $relative"
-	if ! tools/ci/dm.sh -I\"$relative\" $base; then
+	if ! tools/ci/dm.sh -I\"$relative\" -Icrashwrapper.dm $base; then
 		if [[ $first_line == "// COMPILE ERROR"* || $first_line == "//COMPILE ERROR"* ]] then	#expected compile error, should fail to compile
 			echo "Expected compile failure, test passed"
 			testspassed=$((testspassed + 1))
