@@ -18,7 +18,6 @@ else
           exit 1
       fi
   fi
-  exit
   unzip byond.zip
   rm byond.zip
   cd byond
