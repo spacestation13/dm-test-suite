@@ -1,8 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+
+cd Tests
 touch summary.log
-base="Tests/environment.dme"
+base="./environment.dme"
 testsfailed=0
 byondcrashes=0
 testspassed=0
@@ -24,7 +26,7 @@ while read -r file; do
 	
 
 	echo "Compiling $relative"
-	if ! tools/ci/dm.sh -I\"$relative\" -I\"crashwrapper.dm\" $base; then
+	if ! ../tools/ci/dm.sh -I\"$relative\" -I\"crashwrapper.dm\" $base; then
 		if [[ $first_line == "// COMPILE ERROR"* || $first_line == "//COMPILE ERROR"* ]] then	#expected compile error, should fail to compile
 			echo "Expected compile failure, test passed"
 			testspassed=$((testspassed + 1))
@@ -45,27 +47,28 @@ while read -r file; do
 	fi
 
 	echo "Running $relative"
-	touch Tests/errors.log
-	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible; then
+	touch errors.log
+	if ! DreamDaemon environment.dmb -once -close -trusted -verbose -invisible; then
 		echo "TEST FAILED: BYOND CRASHED!"
 		echo "TEST FAILED: $relative" >> summary.log
 		byondcrashes=$((byondcrashes+1))
-		sed -i '/^[[:space:]]*$/d' Tests/errors.log
-		cat Tests/errors.log
-		rm Tests/errors.log
+		sed -i '/^[[:space:]]*$/d' errors.log
+		cat errors.log
+		rm errors.log
+		continue
 	fi
-	if [ -s "Tests/errors.log" ]; then
+	if [ -s "errors.log" ]; then
 		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]	then #expected runtime error, should compile but then fail to run
 			echo "Expected runtime error, test passed"
-			rm Tests/errors.log
+			rm errors.log
 			testspassed=$((testspassed + 1))
 			continue
 		else
 			echo "Errors detected!"
-			sed -i '/^[[:space:]]*$/d' Tests/errors.log
-			cat Tests/errors.log
+			sed -i '/^[[:space:]]*$/d' errors.log
+			cat errors.log
 			echo "TEST FAILED: $relative"
-			rm Tests/errors.log
+			rm errors.log
 			echo "TEST FAILED: $relative" >> summary.log
 			testsfailed=$((testsfailed + 1))
 			continue
@@ -74,7 +77,7 @@ while read -r file; do
 		echo "Test passed: $relative"
 		testspassed=$((testspassed + 1))
 	fi
-done < <(find Tests/Tests -type f -name "*.dm")
+done < <(find ./Tests -type f -name "*.dm")
 
 
 echo "--------------------------------------------------------------------------------"
