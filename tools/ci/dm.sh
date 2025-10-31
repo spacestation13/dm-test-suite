@@ -38,7 +38,6 @@ do
 	then
 		sed -i "1i#include $arg" $dmepath.m.dme
 		sed -i "1i#define FILE_DIR $argdir" $dmepath.m.dme
-		exit
 		continue
 	fi
 done
