@@ -33,9 +33,12 @@ fi
 for var
 do
 	arg=`echo $var | sed -r 's/^.{2}//'`
+	argdir=$(dirname "${var#-I\"}") 
 	if [[ $var == -I* ]]
 	then
 		sed -i "1i#include $arg" $dmepath.m.dme
+		sed -i "1i#define FILE_DIR $argdir" $dmepath.m.dme
+		exit
 		continue
 	fi
 done
