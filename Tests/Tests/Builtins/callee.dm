@@ -6,9 +6,7 @@
 	return callee
 
 /proc/RunTest()
-	RunTestSub()
-
-/proc/RunTestSub()
+	world.log << "[callee.file] [callee.name]"
 	ASSERT(callee.name == "RunTestSub")
 	ASSERT(callee.file == "callee.dm")
 	
