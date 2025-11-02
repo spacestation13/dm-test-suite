@@ -6,9 +6,8 @@
 	return callee
 
 /proc/RunTest()
-	world.log << "[callee.file] [callee.name]"
-	ASSERT(callee.name == "RunTestSub")
-	ASSERT(callee.file == "callee.dm")
+	ASSERT(callee.name == "RunTest")
+	ASSERT(copytext(callee.file, -9) == "callee.dm")
 	
 	var/callee/expired_callee = bar()
 	var/failed = FALSE
