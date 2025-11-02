@@ -6,7 +6,10 @@
 	return callee
 
 /proc/RunTest()
-	ASSERT(callee.name == "RunTest")
+	RunTestSub()
+
+/proc/RunTestSub()
+	ASSERT(callee.name == "RunTestSub")
 	ASSERT(callee.file == "callee.dm")
 	
 	var/callee/expired_callee = bar()
