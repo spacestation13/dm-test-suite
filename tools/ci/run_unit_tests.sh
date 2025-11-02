@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-rm summary.log
+rm -f summary.log
 touch summary.log
 base="Tests/environment.dme"
 testsfailed=0
