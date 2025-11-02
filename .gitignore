@@ -1,2 +1,3 @@
 *.log
 update_tests.sh
+Tests/environment.m.dme
