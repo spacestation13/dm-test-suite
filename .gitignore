@@ -1,7 +1,5 @@
 *.log
 update_tests.sh
 Tests/environment.m.dme
-Tests/environment.m.rsc
-Tests/environment.m.dmb
-Tests/environment.dmb
-Tests/environment.rsc
+Tests/environment*.rsc
+Tests/environment*.dmb
