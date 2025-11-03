@@ -35,7 +35,7 @@ do
 	arg=`echo $var | sed -r 's/^.{2}//'`
 	if [[ $var == -I* ]]
 	then
-		sed -i "1i#include $arg" $dmepath.m.dme
+		sed -i "3i#include $arg" $dmepath.m.dme
 		continue
 	fi
 done

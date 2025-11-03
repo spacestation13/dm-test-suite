@@ -1,11 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
+rm -f summary.log
 touch summary.log
 base="Tests/environment.dme"
 testsfailed=0
 byondcrashes=0
 testspassed=0
+
+filter=""
+
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    --filter) filter="$2"; shift ;;
+  esac
+  shift
+done
 
 while read -r file; do
 	first_line=$(head -n 1 "$file" || echo "")
@@ -74,7 +84,7 @@ while read -r file; do
 		echo "Test passed: $relative"
 		testspassed=$((testspassed + 1))
 	fi
-done < <(find Tests/Tests -type f -name "*.dm")
+done < <(find Tests/Tests -type f -name "*$filter*.dm")
 
 
 echo "--------------------------------------------------------------------------------"
