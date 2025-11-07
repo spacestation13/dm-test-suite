@@ -18,14 +18,30 @@ jobs:
       - name: Get latest version number
         run: |
           curl -s https://www.byond.com/download/version.txt | awk -F. '{print "BYOND_MAJOR_VERSION="$1"\nBYOND_MINOR_VERSION="$2}' > buildByond.conf
-      - name: Commit and push if changed
+
+      - name: Check for buildByond.conf changes
+        id: check_diff
         run: |
           if ! git diff --quiet buildByond.conf; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add buildByond.conf
-            git commit -m "Automated update $(cat buildByond.conf | tr '\n' ' ')"
-            git push origin master
+            echo "changed=true" >> $GITHUB_OUTPUT
           else
-            echo "No changes in BYOND version — skipping commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Commit and push if changed
+        if: steps.check_diff.outputs.changed == 'true'
+        run: |          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add buildByond.conf
+          git commit -m "Automated update $(cat buildByond.conf | tr '\n' ' ')"
+          git push origin master
+
+      - name: Trigger downstream workflow
+        if: steps.check_diff.outputs.changed == 'true'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: byond-updated
+          

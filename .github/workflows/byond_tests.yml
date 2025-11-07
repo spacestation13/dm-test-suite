@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - "master"
+  repository_dispatch:
+    types: [byond-updated]      
 
 jobs:
   unit_test:
@@ -48,6 +50,7 @@ jobs:
           tools/ci/run_unit_tests.sh
 
       - name: Notify Discord
+        if: always()
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           PASSED: ${{ steps.run_tests.outputs.passed }}
