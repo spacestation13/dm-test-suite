@@ -94,5 +94,10 @@ echo "passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes"
 echo "--------------------------------------------------------------------------------"
 echo "failed tests:"
 cat summary.log
+
+echo "passed=$testspassed" >> "$GITHUB_OUTPUT"
+echo "failed=$testsfailed" >> "$GITHUB_OUTPUT"
+echo "crashes=$byondcrashes" >> "$GITHUB_OUTPUT"
+
 exit $testsfailed
 

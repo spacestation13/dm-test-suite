@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - "master"
+  repository_dispatch:
+    types: [byond-updated]      
 
 jobs:
   unit_test:
@@ -43,5 +45,16 @@ jobs:
           echo "MANPATH=/home/runner/BYOND/byond/man:$MANPATH" >> $GITHUB_ENV
 
       - name: Run Full Unit Tests
+        id: run_tests
         run: |
           tools/ci/run_unit_tests.sh
+
+      - name: Notify Discord
+        if: ${{ always() && github.event.client_payload.fromupdate == 'true' }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PASSED: ${{ steps.run_tests.outputs.passed }}
+          FAILED: ${{ steps.run_tests.outputs.failed }}
+          CRASHES: ${{ steps.run_tests.outputs.crashes }}
+        run: ./tools/ci/discord_report.sh
