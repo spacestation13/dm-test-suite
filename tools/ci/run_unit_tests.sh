@@ -95,14 +95,9 @@ echo "--------------------------------------------------------------------------
 echo "failed tests:"
 cat summary.log
 
-echo "summary=passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes" >> "$GITHUB_OUTPUT"
+echo "passed=$testspassed" >> "$GITHUB_OUTPUT"
+echo "failed=$testsfailed" >> "$GITHUB_OUTPUT"
+echo "crashes=$byondcrashes" >> "$GITHUB_OUTPUT"
 
-if [[ $testsfailed -eq 0 && $byondcrashes -eq 0 ]]; then
-  color=3066993  # green
-else
-  color=15158332 # red
-fi
-
-echo "color=$color" >> "$GITHUB_OUTPUT"
 exit $testsfailed
 

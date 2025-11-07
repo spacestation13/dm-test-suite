@@ -43,18 +43,51 @@ jobs:
           echo "MANPATH=/home/runner/BYOND/byond/man:$MANPATH" >> $GITHUB_ENV
 
       - name: Run Full Unit Tests
-        id: unittests
+        id: run_tests
         run: |
           tools/ci/run_unit_tests.sh
 
       - name: Notify Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          SUMMARY: ${{ steps.unittests.outputs.summary }}
-          COLOR: ${{ steps.unittests.outputs.color }}
+          PASSED: ${{ steps.run_tests.outputs.passed }}
+          FAILED: ${{ steps.run_tests.outputs.failed }}
+          CRASHES: ${{ steps.run_tests.outputs.crashes }}
         run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "$(jq -n --arg desc "$SUMMARY" --argjson color "$COLOR" \
-              '{embeds: [{title: "Unit Test Results", description: $desc, color: $color}] }')" \
-            "$DISCORD_WEBHOOK_URL"
+          # Determine embed color and emoji
+          if [[ "$FAILED" -eq 0 && "$CRASHES" -eq 0 ]]; then
+            COLOR=3066993      # green
+            STATUS="✅ All tests passed"
+          else
+            COLOR=15158332     # red
+            STATUS="❌ Some tests failed or crashed"
+          fi
+
+          # Read failing tests
+          if [ -f summary.log ]; then
+            FAILED_TESTS=$(tail -n 10 summary.log)  # show last 10 failed tests
+            # Wrap in a code block for formatting
+            FAILED_TESTS="\`\`\`\n$FAILED_TESTS\n\`\`\`"
+          else
+            FAILED_TESTS="No detailed failures recorded."
+          fi
+
+          # Build summary description
+          DESCRIPTION="$STATUS\nPassed: $PASSED, Failed: $FAILED, Crashes: $CRASHES\n$FAILED_TESTS"
+
+          # Commit/branch info (optional)
+          COMMIT_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
+          BRANCH="$GITHUB_REF_NAME"
+
+          # Send embed to Discord
+          jq -n \
+            --arg title "BYOND Unit Test Results" \
+            --arg desc "$DESCRIPTION" \
+            --arg url "$COMMIT_URL" \
+            --arg footer "Branch: $BRANCH" \
+            --argjson color "$COLOR" \
+            '{embeds: [{title: $title, description: $desc, url: $url, color: $color, footer: {text: $footer}}]}' \
+            | curl -H "Content-Type: application/json" \
+                  -X POST \
+                  -d @- \
+                  "$DISCORD_WEBHOOK_URL"
