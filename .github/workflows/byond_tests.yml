@@ -50,7 +50,7 @@ jobs:
           tools/ci/run_unit_tests.sh
 
       - name: Notify Discord
-        if: always() && ${{ github.event.client_payload.fromupdate }} == 'true'
+        if: ${{ always() && github.event.client_payload.fromupdate == 'true' }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
