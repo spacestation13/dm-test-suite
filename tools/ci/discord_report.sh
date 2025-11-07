@@ -12,7 +12,7 @@ MAX_FAILED_LINES=10
 if [[ "$FAILED" -eq 0 && "$CRASHES" -eq 0 ]]; then
     COLOR=3066993
     STATUS="✅ All tests passed"
-    FAILED_LIST="No detailed failures recorded."
+    FAILED_LIST="No runtime or compile-time errors found :partying_face:"
 else
     COLOR=15158332
     STATUS="❌ Some tests failed or crashed"
