@@ -37,7 +37,7 @@ $FAILED_LIST"
 
 # Send embed to Discord, preserving newlines
 echo "$DESCRIPTION" | jq -Rs --arg title "${BYOND_MAJOR_VERSION}.${BYOND_MINOR_VERSION} Unit Test Results" \
-  --arg url "https://github.com/spacestation13/dm-test-suite" \
+  --arg url "$ACTION_URL" \
   --argjson color "$COLOR" \
   '{embeds: [{title: $title, description: ., url: $url, color: $color}]}' \
   | curl -H "Content-Type: application/json" \

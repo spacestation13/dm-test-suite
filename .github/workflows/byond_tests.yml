@@ -53,6 +53,7 @@ jobs:
         if: always()
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/${{ github.job }}
           PASSED: ${{ steps.run_tests.outputs.passed }}
           FAILED: ${{ steps.run_tests.outputs.failed }}
           CRASHES: ${{ steps.run_tests.outputs.crashes }}
