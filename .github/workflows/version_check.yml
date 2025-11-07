@@ -7,9 +7,14 @@ permissions:
   contents: write  # required to push to master
 
 jobs:
-  health_check:
+  version_check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
       - name: Get latest version number
         run: |
           curl -s https://www.byond.com/download/version.txt | awk -F. '{print "BYOND_MAJOR_VERSION="$1"\nBYOND_MINOR_VERSION="$2}' > buildByond.conf
