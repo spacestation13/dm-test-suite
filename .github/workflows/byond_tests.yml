@@ -14,13 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Notify Discord
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          message: "Hello, from Github"
-
-
       - name: Add Architecture
         run: |
           sudo dpkg --add-architecture i386
@@ -50,7 +43,18 @@ jobs:
           echo "MANPATH=/home/runner/BYOND/byond/man:$MANPATH" >> $GITHUB_ENV
 
       - name: Run Full Unit Tests
+        id: unittests
         run: |
           tools/ci/run_unit_tests.sh
 
-      
+      - name: Notify Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SUMMARY: ${{ steps.unittests.outputs.summary }}
+          COLOR: ${{ steps.unittests.outputs.color }}
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "$(jq -n --arg desc "$SUMMARY" --argjson color "$COLOR" \
+              '{embeds: [{title: "Unit Test Results", description: $desc, color: $color}] }')" \
+            "$DISCORD_WEBHOOK_URL"

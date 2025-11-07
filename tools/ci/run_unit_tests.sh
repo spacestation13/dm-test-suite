@@ -8,7 +8,7 @@ testsfailed=0
 byondcrashes=0
 testspassed=0
 
-filter=""
+filter="Division"
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -94,5 +94,13 @@ echo "passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes"
 echo "--------------------------------------------------------------------------------"
 echo "failed tests:"
 cat summary.log
+
+echo "summary='passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes'" >> "$GITHUB_OUTPUT"
+if [[$testsfailed + $byondcrashes == 0]] then
+	color=3066993  # green
+else
+	color=15158332 # red
+fi
+echo "color=$color" >> "$GITHUB_OUTPUT"
 exit $testsfailed
 
