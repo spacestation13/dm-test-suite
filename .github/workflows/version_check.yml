@@ -37,7 +37,7 @@ jobs:
           git commit -m "Automated update $(cat buildByond.conf | tr '\n' ' ')"
           git push origin master
 
-      - name: Trigger downstream workflow
+      - name: Trigger unit test workflow
         if: steps.check_diff.outputs.changed == 'true'
         uses: peter-evans/repository-dispatch@v1
         with:
