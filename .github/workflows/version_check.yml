@@ -44,4 +44,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           event-type: byond-updated
+          client-payload: '{"fromupdate": "true"}'
           
