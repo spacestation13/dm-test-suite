@@ -8,7 +8,7 @@ testsfailed=0
 byondcrashes=0
 testspassed=0
 
-filter="Division"
+filter=""
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
