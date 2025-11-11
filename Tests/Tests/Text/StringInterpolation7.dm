@@ -15,24 +15,24 @@
 	// Lowercase \a on datums
 	ASSERT("\a [new /datum/thing]" == "a thing")
 	ASSERT("\a [new /datum/Thing]" == "Thing")
-	ASSERT("\a [new /datum/proper_thing]" == "thing")
+	ASSERT("\a [new /datum/proper_thing]" == "\proper thing")
 	ASSERT("\a [new /datum/plural_things]" == "some things")
 	
 	// Uppercase \A on datums
 	ASSERT("\A [new /datum/thing]" == "A thing")
 	ASSERT("\A [new /datum/Thing]" == "Thing")
-	ASSERT("\A [new /datum/proper_thing]" == "thing")
+	ASSERT("\A [new /datum/proper_thing]" == "\proper thing")
 	ASSERT("\A [new /datum/plural_things]" == "Some things")
 	
 	// Lowercase \a on strings
 	ASSERT("\a ["thing"]" == "a thing")
 	ASSERT("\a ["Thing"]" == "Thing")
-	ASSERT("\a ["\proper thing"]" == "thing")
+	ASSERT("\a ["\proper thing"]" == "\proper thing")
 	
 	// Uppercase \A on strings
 	ASSERT("\A ["thing"]" == "A thing")
 	ASSERT("\A ["Thing"]" == "Thing")
-	ASSERT("\A ["\proper thing"]" == "thing")
+	ASSERT("\A ["\proper thing"]" == "\proper thing")
 
 	// Invalid \a
 	ASSERT("\a [123]" == "")
