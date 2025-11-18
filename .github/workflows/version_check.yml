@@ -17,6 +17,8 @@ jobs:
 
       - name: Get latest version number
         run: |
+          set -e
+          set -o pipefail
           curl --fail -s https://www.byond.com/download/version.txt | awk -F. '{print "BYOND_MAJOR_VERSION="$1"\nBYOND_MINOR_VERSION="$2}' > buildByond.conf
 
       - name: Check for buildByond.conf changes
