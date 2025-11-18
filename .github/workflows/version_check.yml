@@ -17,7 +17,7 @@ jobs:
 
       - name: Get latest version number
         run: |
-          curl -s https://www.byond.com/download/version.txt | awk -F. '{print "BYOND_MAJOR_VERSION="$1"\nBYOND_MINOR_VERSION="$2}' > buildByond.conf
+          curl --fail -s https://www.byond.com/download/version.txt | awk -F. '{print "BYOND_MAJOR_VERSION="$1"\nBYOND_MINOR_VERSION="$2}' > buildByond.conf
 
       - name: Check for buildByond.conf changes
         id: check_diff
