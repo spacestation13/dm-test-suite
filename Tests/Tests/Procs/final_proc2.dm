@@ -1,3 +1,4 @@
+// NOBYOND
 /proc/RunTest()
     return
     

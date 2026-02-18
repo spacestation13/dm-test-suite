@@ -1,3 +1,4 @@
+// NOBYOND
 #define EMPTY
 #define EMPTY_FN(a)
 #define DEFINE #define
