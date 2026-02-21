@@ -36,11 +36,17 @@ DESCRIPTION="## $STATUS
 $FAILED_LIST"
 
 # Send embed to Discord, preserving newlines
-echo "$DESCRIPTION" | jq -Rs --arg title "${BYOND_MAJOR_VERSION}.${BYOND_MINOR_VERSION} Unit Test Results" \
+message=`echo "$DESCRIPTION" | jq -Rs --arg title "${BYOND_MAJOR_VERSION}.${BYOND_MINOR_VERSION} Unit Test Results" \
   --arg url "$ACTION_URL" \
   --argjson color "$COLOR" \
-  '{embeds: [{title: $title, description: ., url: $url, color: $color}]}' \
-  | curl -H "Content-Type: application/json" \
+  '{embeds: [{title: $title, description: ., url: $url, color: $color}]}'`
+  
+echo $message | curl -H "Content-Type: application/json" \
          -X POST \
          -d @- \
          "$DISCORD_WEBHOOK_URL"
+
+echo $message | curl -H "Content-Type: application/json" \
+         -X POST \
+         -d @- \
+         "$BYONDCORD_WEBHOOK_URL"
