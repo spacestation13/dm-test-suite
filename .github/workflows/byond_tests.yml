@@ -53,6 +53,7 @@ jobs:
         if: ${{ always() && github.event.client_payload.fromupdate == 'true' }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          BYONDCORD_WEBHOOK_URL: ${{ secrets.BYONDCORD_WEBHOOK_URL }}
           ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PASSED: ${{ steps.run_tests.outputs.passed }}
           FAILED: ${{ steps.run_tests.outputs.failed }}
