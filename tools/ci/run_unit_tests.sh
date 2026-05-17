@@ -63,6 +63,8 @@ while read -r file; do
 		sed -i '/^[[:space:]]*$/d' Tests/errors.log
 		cat Tests/errors.log
 		rm Tests/errors.log
+		testsfailed=$((testsfailed + 1))
+		continue
 	fi
 	if [ -s "Tests/errors.log" ]; then
 		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]	then #expected runtime error, should compile but then fail to run
