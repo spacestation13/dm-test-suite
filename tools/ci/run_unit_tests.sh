@@ -94,7 +94,6 @@ run_single_test() {
 
 while read -r file; do
 	run_single_test $file mainsummary.log
-	break
 done < <(find Tests/Tests -type f -name "*$filter*.dm")
 
 
@@ -117,7 +116,6 @@ testspassed=0
 
 while read -r file; do
 	run_single_test $file opensummary.log
-	break
 done < <(find Tests/OpenIssues -type f -name "*$filter*.dm")
 
 
