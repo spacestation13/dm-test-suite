@@ -1,0 +1,14 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "dmruntest-error",
+      "severity": "error",
+      "pattern": [
+        {
+          "regexp": "^TEST FAILED([^: ]+)$",
+          "file": 1
+        }
+      ]
+    }
+  ]
+}

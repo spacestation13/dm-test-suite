@@ -78,7 +78,7 @@ while read -r file; do
 			cat Tests/errors.log
 			echo "TEST FAILED: $relative"
 			rm Tests/errors.log
-			echo "TEST FAILED: $relative" >> summary.log
+			echo "Failed test: $relative" >> summary.log
 			testsfailed=$((testsfailed + 1))
 			continue
 		fi

@@ -38,3 +38,13 @@
 
 	ASSERT(R.Find("foo foo", 69) == 0)
 	ASSERT(findtext("foo foo", R, 69) == 0)
+
+#ifdef OPENDREAM
+	// BYOND doesn't support named params for some builtins because it's terrible
+	// just keep this here to check for regression
+	ASSERT(R.Find("foo foo", start=1) == 1)
+	ASSERT(findtext("foo foo", R, Start=1) == 1)
+
+	ASSERT(R.Find("foo foo", start=2) == 5)
+	ASSERT(findtext("foo foo", R, Start=2) == 5)
+#endif
