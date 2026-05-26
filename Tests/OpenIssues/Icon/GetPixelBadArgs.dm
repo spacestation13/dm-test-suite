@@ -1,3 +1,5 @@
+// https://www.byond.com/forum/post/2987386
+// https://www.byond.com/forum/post/2987385
 /proc/RunTest()
 	var/icon/I = icon('hanoi.dmi')
 	ASSERT(I.GetPixel(1,1,"0",dir=new /datum()) == "#ff0000") //what if dir was weird

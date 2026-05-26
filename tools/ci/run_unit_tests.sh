@@ -62,7 +62,7 @@ run_single_test() {
 	touch Tests/errors.log
 	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible; then
 		echo "TEST FAILED:$relative:BYOND crashed"
-		echo "Failed (CRASH): $relative" >> $logfile
+		echo "CRASHED: $relative" >> $logfile
 		byondcrashes=$((byondcrashes+1))
 		sed -i '/^[[:space:]]*$/d' Tests/errors.log
 		cat Tests/errors.log
@@ -82,7 +82,7 @@ run_single_test() {
 			cat Tests/errors.log
 			echo "TEST FAILED:$relative:Expected runtime error"
 			rm Tests/errors.log
-			echo "Failed test: $relative" >> $logfile
+			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
 			return
 		fi
@@ -102,7 +102,7 @@ echo "Test Summary"
 echo "--------------------------------------------------------------------------------"
 echo "passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes"
 echo "--------------------------------------------------------------------------------"
-echo "failed tests:"
+echo "Failed tests:"
 cat mainsummary.log
 
 echo "passed=$testspassed" >> "$GITHUB_OUTPUT"
@@ -124,7 +124,7 @@ echo "Open Issues"
 echo "--------------------------------------------------------------------------------"
 echo "passed: $testspassed, failed: $testsfailed, BYOND crashes: $byondcrashes"
 echo "--------------------------------------------------------------------------------"
-echo "failed tests:"
+echo "Failed tests:"
 cat opensummary.log
 
 echo "openpassed=$testspassed" >> "$GITHUB_OUTPUT"

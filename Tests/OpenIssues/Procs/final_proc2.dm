@@ -1,4 +1,4 @@
-// NOBYOND
+// https://www.byond.com/forum/post/2983339
 /proc/RunTest()
     return
     
