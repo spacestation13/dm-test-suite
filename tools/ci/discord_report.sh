@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# Environment variables expected:
-# DISCORD_WEBHOOK_URL, PASSED, FAILED, CRASHES
-
 source buildByond.conf
 
 MAX_FAILED_LINES=10
@@ -17,11 +14,11 @@ else
     COLOR=15158332
     STATUS="❌ Some tests failed or crashed"
 
-    TOTAL_FAILED=$(wc -l < summary.log)
+    TOTAL_FAILED=$(wc -l < mainsummary.log)
     if [ "$TOTAL_FAILED" -le "$MAX_FAILED_LINES" ]; then
-        FAILED_LIST=$(cat summary.log)
+        FAILED_LIST=$(cat mainsummary.log)
     else
-        FAILED_LIST=$(head -n $MAX_FAILED_LINES summary.log)
+        FAILED_LIST=$(head -n $MAX_FAILED_LINES mainsummary.log)
         REMAINING=$((TOTAL_FAILED - MAX_FAILED_LINES))
         FAILED_LIST="$FAILED_LIST"$'\n'"... +$REMAINING more failed tests"
     fi
@@ -30,10 +27,33 @@ $FAILED_LIST
 \`\`\`"
 fi
 
+
+if [[ "$OPEN_FAILED" -eq 0 && "$OPEN_CRASHES" -eq 0 ]]; then
+    OPEN_STATUS="✅ No open issues unresolved!"
+    OPEN_FAILED_LIST="No runtime or compile-time errors found :partying_face:"
+else
+    OPEN_STATUS="⚠️ Some open issue tests remain unfixed"
+
+    TOTAL_FAILED=$(wc -l < opensummary.log)
+    if [ "$TOTAL_FAILED" -le "$MAX_FAILED_LINES" ]; then
+        OPEN_FAILED_LIST=$(cat opensummary.log)
+    else
+        OPEN_FAILED_LIST=$(head -n $MAX_FAILED_LINES opensummary.log)
+        REMAINING=$((TOTAL_FAILED - MAX_FAILED_LINES))
+        OPEN_FAILED_LIST="$FAILED_LIST"$'\n'"... +$REMAINING more failed tests"
+    fi
+    OPEN_FAILED_LIST="\`\`\`
+$OPEN_FAILED_LIST
+\`\`\`"
+fi
+
 # Build description with literal newlines
 DESCRIPTION="## $STATUS
 ### Passed: $PASSED, Failed: $FAILED, Crashes: $CRASHES
-$FAILED_LIST"
+$FAILED_LIST
+## $OPEN_STATUS
+### Passed: $OPEN_PASSED, Failed: $OPEN_FAILED, Crashes: $OPEN_CRASHES
+$OPEN_FAILED_LIST"
 
 # Send embed to Discord, preserving newlines
 message=`echo "$DESCRIPTION" | jq -Rs --arg title "${BYOND_MAJOR_VERSION}.${BYOND_MINOR_VERSION} Unit Test Results" \
