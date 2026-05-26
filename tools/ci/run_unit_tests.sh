@@ -44,15 +44,15 @@ run_single_test() {
 			testspassed=$((testspassed + 1))
 			return
 		else
-			echo "TEST FAILED: $relative"
-			echo "TEST FAILED: $relative" >> $logfile
+			echo "TEST FAILED:$relative:Compile failure"
+			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
 			return		
 		fi
 	else
 		if [[ $first_line == "// COMPILE ERROR"* || $first_line == "//COMPILE ERROR"* ]] then	#expected compile error, should fail to compile
-			echo "TEST FAILED: Expected compile failure"
-			echo "TEST FAILED: $relative" >> $logfile
+			echo "TEST FAILED:$relative:Expected compile failure"
+			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
 			return
 		fi
@@ -61,8 +61,8 @@ run_single_test() {
 	echo "Running $relative"
 	touch Tests/errors.log
 	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible; then
-		echo "BYOND CRASHED: $relative"
-		echo "BYOND crash: $relative" >> $logfile
+		echo "TEST FAILED:$relative:BYOND crashed"
+		echo "Failed (CRASH): $relative" >> $logfile
 		byondcrashes=$((byondcrashes+1))
 		sed -i '/^[[:space:]]*$/d' Tests/errors.log
 		cat Tests/errors.log
@@ -80,7 +80,7 @@ run_single_test() {
 			echo "Errors detected!"
 			sed -i '/^[[:space:]]*$/d' Tests/errors.log
 			cat Tests/errors.log
-			echo "TEST FAILED: $relative"
+			echo "TEST FAILED:$relative:Expected runtime error"
 			rm Tests/errors.log
 			echo "Failed test: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))

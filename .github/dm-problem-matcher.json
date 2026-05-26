@@ -5,8 +5,9 @@
       "severity": "error",
       "pattern": [
         {
-          "regexp": "^TEST FAILED([^: ]+)$",
-          "file": 1
+          "regexp": "^TEST FAILED([^: ]+)([^: ]+)$",
+          "file": 1,
+          "message": 2
         }
       ]
     }
