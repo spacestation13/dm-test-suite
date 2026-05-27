@@ -1,3 +1,4 @@
+// https://www.byond.com/forum/post/2988110
 /proc/RunTest()
 	var/alist/AL = alist("a" = null, "b" = null, "c" = null)
 	var/alist/AL2 = alist("a" = 1, "b" = 2, "c" = 3)
