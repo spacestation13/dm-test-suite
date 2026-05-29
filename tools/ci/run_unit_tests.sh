@@ -60,7 +60,7 @@ run_single_test() {
 
 	echo "Running $relative"
 	touch Tests/errors.log
-	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible; then
+	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible -log errors.log ; then
 		echo "TEST FAILED:$file:BYOND crashed"
 		echo "CRASHED: $relative" >> $logfile
 		byondcrashes=$((byondcrashes+1))
@@ -70,8 +70,11 @@ run_single_test() {
 		testsfailed=$((testsfailed + 1))
 		return
 	fi
-	if [ -s "Tests/errors.log" ]; then
-		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]	then #expected runtime error, should compile but then fail to run
+	sed -i '1,3d; /^[[:space:]]*$/d' Tests/errors.log
+	if [ -s Tests/errors.log ]
+	then
+		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]
+		then #expected runtime error, should compile but then fail to run
 			echo "Expected runtime error, test passed"
 			rm Tests/errors.log
 			testspassed=$((testspassed + 1))
@@ -80,15 +83,25 @@ run_single_test() {
 			echo "Errors detected!"
 			sed -i '/^[[:space:]]*$/d' Tests/errors.log
 			cat Tests/errors.log
-			echo "TEST FAILED:$file:Expected runtime error"
+			echo "TEST FAILED:$file:Unexpected runtime error"
 			rm Tests/errors.log
 			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
 			return
 		fi
 	else
-		echo "Test passed: $relative"
-		testspassed=$((testspassed + 1))
+		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]
+		then #expected runtime error, should compile but then fail to run
+			echo "TEST FAILED:$file:Expected runtime error, but none found!"
+			rm Tests/errors.log
+			echo "Failed: $relative" >> $logfile
+			testsfailed=$((testsfailed + 1))
+			return
+		else	
+			echo "Test passed: $relative"
+			testspassed=$((testspassed + 1))
+			rm Tests/errors.log
+		fi
 	fi
 }
 
