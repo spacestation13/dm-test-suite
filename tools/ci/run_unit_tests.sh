@@ -24,6 +24,7 @@ output_step_summary() {
 	reason=$2
 	logfile=$3
 	echo "❌ TEST FAILED: [$file](https://github.com/spacestation13/dm-test-suite/tree/master/$file)" >> $GITHUB_STEP_SUMMARY
+	echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
     
     echo "<details>" >> $GITHUB_STEP_SUMMARY
     echo "<summary>$reason</summary>" >> $GITHUB_STEP_SUMMARY
@@ -35,6 +36,7 @@ output_step_summary() {
     
     echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
     echo "</details>" >> $GITHUB_STEP_SUMMARY
+	echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
 }
 
 run_single_test() {
@@ -152,6 +154,7 @@ testsfailed=0
 byondcrashes=0
 testspassed=0
 
+echo "" >> $GITHUB_STEP_SUMMARY
 echo "## Open Issues" >> $GITHUB_STEP_SUMMARY
 
 while read -r file; do
