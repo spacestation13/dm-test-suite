@@ -19,6 +19,24 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
+output_step_summary() {
+	file=$1
+	reason=$2
+	logfile=$3
+	echo "❌ TEST FAILED: [$file](https://github.com/spacestation13/dm-test-suite/tree/master/$file)" >> $GITHUB_STEP_SUMMARY
+    
+    echo "<details>" >> $GITHUB_STEP_SUMMARY
+    echo "<summary>$reason</summary>" >> $GITHUB_STEP_SUMMARY
+    echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
+    
+    echo "\`\`\`text" >> $GITHUB_STEP_SUMMARY
+    cat $logfile >> $GITHUB_STEP_SUMMARY
+    echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    
+    echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
+    echo "</details>" >> $GITHUB_STEP_SUMMARY
+}
+
 run_single_test() {
 	file=$1
 	logfile=$2
@@ -44,14 +62,14 @@ run_single_test() {
 			testspassed=$((testspassed + 1))
 			return
 		else
-			echo "TEST FAILED:$file:Compile failure"
+			output_step_summary $file "Compile failure!" result.log
 			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
-			return		
+			return
 		fi
 	else
 		if [[ $first_line == "// COMPILE ERROR"* || $first_line == "//COMPILE ERROR"* ]] then	#expected compile error, should fail to compile
-			echo "TEST FAILED:$file:Expected compile failure"
+			output_step_summary $file "Expected a compile failure!" result.log
 			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
 			return
@@ -61,7 +79,7 @@ run_single_test() {
 	echo "Running $relative"
 	touch Tests/errors.log
 	if ! DreamDaemon Tests/environment.dmb -once -close -trusted -verbose -invisible -log errors.log ; then
-		echo "TEST FAILED:$file:BYOND crashed"
+		output_step_summary $file "BYOND crashed!" Tests/errors.log
 		echo "CRASHED: $relative" >> $logfile
 		byondcrashes=$((byondcrashes+1))
 		sed -i '/^[[:space:]]*$/d' Tests/errors.log
@@ -82,7 +100,7 @@ run_single_test() {
 		else
 			echo "Errors detected!"
 			sed -i '/^[[:space:]]*$/d' Tests/errors.log
-			cat Tests/errors.log
+			output_step_summary $file "Runtime error" Tests/errors.log
 			echo "TEST FAILED:$file:Unexpected runtime error"
 			rm Tests/errors.log
 			echo "Failed: $relative" >> $logfile
@@ -93,6 +111,7 @@ run_single_test() {
 		if [[ $first_line == "// RUNTIME ERROR"* || $first_line == "//RUNTIME ERROR"* ]]
 		then #expected runtime error, should compile but then fail to run
 			echo "TEST FAILED:$file:Expected runtime error, but none found!"
+			output_step_summary $file "Expected runtime error" Tests/errors.log
 			rm Tests/errors.log
 			echo "Failed: $relative" >> $logfile
 			testsfailed=$((testsfailed + 1))
@@ -105,10 +124,16 @@ run_single_test() {
 	fi
 }
 
+echo "# Test Summary" >> $GITHUB_STEP_SUMMARY
+
 while read -r file; do
 	run_single_test $file mainsummary.log
 done < <(find Tests/Tests -type f -name "*$filter*.dm")
 
+if [[ "$testsfailed" -eq 0 ]]
+then
+	echo "### ✅ All tests passed" >> $GITHUB_STEP_SUMMARY
+fi
 
 echo "--------------------------------------------------------------------------------"
 echo "Test Summary"
@@ -127,9 +152,16 @@ testsfailed=0
 byondcrashes=0
 testspassed=0
 
+echo "## Open Issues" >> $GITHUB_STEP_SUMMARY
+
 while read -r file; do
 	run_single_test $file opensummary.log
 done < <(find Tests/OpenIssues -type f -name "*$filter*.dm")
+
+if [[ "$testsfailed" -eq 0 ]]
+then
+	echo "### ✅ All tests passed" >> $GITHUB_STEP_SUMMARY
+fi
 
 
 echo "--------------------------------------------------------------------------------"
