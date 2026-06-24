@@ -22,7 +22,7 @@ done
 output_step_summary() {
 	file=$1
 	reason=$2
-	logfile=$3
+	summarylogfile=$3
 	echo "❌ TEST FAILED: [$file](https://github.com/spacestation13/dm-test-suite/tree/master/$file)" >> $GITHUB_STEP_SUMMARY
 	echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
     
@@ -31,7 +31,7 @@ output_step_summary() {
     echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line
     
     echo "\`\`\`text" >> $GITHUB_STEP_SUMMARY
-    cat $logfile >> $GITHUB_STEP_SUMMARY
+    cat $summarylogfile >> $GITHUB_STEP_SUMMARY
     echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
     
     echo "" >> $GITHUB_STEP_SUMMARY # Critical empty line

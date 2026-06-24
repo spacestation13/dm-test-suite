@@ -65,8 +65,10 @@ echo $message | curl -H "Content-Type: application/json" \
          -X POST \
          -d @- \
          "$DISCORD_WEBHOOK_URL"
-
-echo $message | curl -H "Content-Type: application/json" \
-         -X POST \
-         -d @- \
-         "$BYONDCORD_WEBHOOK_URL"
+         
+if [ -n "$BYONDCORD_WEBHOOK_URL" ]; then
+    echo $message | curl -H "Content-Type: application/json" \
+            -X POST \
+            -d @- \
+            "$BYONDCORD_WEBHOOK_URL"
+fi

@@ -49,6 +49,18 @@ jobs:
         run: |
           tools/ci/run_unit_tests.sh
 
+      - name: Test Notify Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.TEST_DISCORD_WEBHOOK_URL }}
+          ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PASSED: ${{ steps.run_tests.outputs.passed }}
+          FAILED: ${{ steps.run_tests.outputs.failed }}
+          CRASHES: ${{ steps.run_tests.outputs.crashes }}
+          OPEN_PASSED: ${{ steps.run_tests.outputs.openpassed }}
+          OPEN_FAILED: ${{ steps.run_tests.outputs.openfailed }}
+          OPEN_CRASHES: ${{ steps.run_tests.outputs.opencrashes }}          
+        run: ./tools/ci/discord_report.sh          
+
       - name: Notify Discord
         if: ${{ always() && github.event.client_payload.fromupdate == 'true' }}
         env:

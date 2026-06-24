@@ -1,4 +1,4 @@
-
+// COMPILE ERROR
 //# issue 513
 
 /proc/RunTest()
