@@ -50,6 +50,7 @@ jobs:
           tools/ci/run_unit_tests.sh
 
       - name: Test Notify Discord
+        if: ${{ always() }}
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.TEST_DISCORD_WEBHOOK_URL }}
           ACTION_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
