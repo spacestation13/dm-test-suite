@@ -1,5 +1,5 @@
-// https://www.byond.com/forum/post/2987386
-// https://www.byond.com/forum/post/2987385
+// NOBYOND
+// this unit test crashed byond until https://www.byond.com/forum/post/2987385 and https://www.byond.com/forum/post/2987386 are fixed
 /proc/RunTest()
 	var/icon/I = icon('hanoi.dmi')
 	ASSERT(I.GetPixel(1,1,"0",dir=new /datum()) == "#ff0000") //what if dir was weird
